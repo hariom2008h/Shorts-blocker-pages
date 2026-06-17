@@ -1,0 +1,6 @@
+{
+  "name": "Shorts Blocker",
+  "description": "A premium, distraction-free landing page for the Shorts Blocker Android application.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
