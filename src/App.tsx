@@ -113,6 +113,32 @@ function FAQItem({ question, answer, delay }: { question: string, answer: string
   );
 }
 
+const imageModules = import.meta.glob('/public/*.{png,jpg,jpeg,webp}', { eager: true, query: '?url', import: 'default' });
+
+const screenshots = Object.keys(imageModules)
+  .filter(key => !key.endsWith('logo.jpg') && !key.endsWith('favicon.ico'))
+  .map(key => {
+    const filename = key.replace('/public/', '');
+    let title = "App Screen";
+    let Icon = Smartphone;
+    
+    if (filename === 'ui-1.png') { title = "Scroll Intercepted"; Icon = Shield; }
+    else if (filename === 'ui-2.png') { title = "Security Settings"; Icon = Smartphone; }
+    else if (filename === 'ui-3.png') { title = "Target Apps"; Icon = Clock; }
+    else if (filename === 'ui-4.png') { title = "System & Theme"; Icon = Smartphone; }
+    else {
+      title = filename.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ").replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())));
+    }
+    
+    return {
+      url: `./${filename}`,
+      filename,
+      title,
+      Icon
+    };
+  })
+  .sort((a, b) => a.filename.localeCompare(b.filename));
+
 export default function App() {
   const [releases, setReleases] = useState<Release[]>([]);
   const [loading, setLoading] = useState(true);
@@ -150,50 +176,32 @@ export default function App() {
   const latestApk = latestRelease?.assets.find(a => a.name.endsWith('.apk'));
   const latestApkSizeMB = latestApk ? (latestApk.size / (1024 * 1024)).toFixed(1) : null;
 
-  const handleShare = async () => {
-    const shareData = {
-      title: 'Shorts Blocker',
-      text: 'Reclaim Your Time & Focus with Shorts Blocker',
-      url: window.location.href,
-    };
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-      } catch (err) {
-        console.error('Error sharing', err);
-      }
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('Link copied to clipboard!');
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-light-1 text-brand-dark font-sans selection:bg-brand-blue selection:text-white pb-12">
+    <div className="min-h-screen bg-light-1 text-brand-dark font-sans selection:bg-brand-blue selection:text-white pb-0">
       {/* Sticky Header / Navbar */}
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: isScrolled ? 0 : -100 }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
-        className="fixed top-0 inset-x-0 z-50 bg-white/90 backdrop-blur-md border-b border-light-2 shadow-sm"
+        className="fixed top-0 inset-x-0 z-50 bg-gradient-to-r from-brand-blue to-brand-dark shadow-md"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 h-8 bg-[#1A1A1A] rounded-xl flex items-center justify-center border border-light-2/50 shrink-0">
-              <Ban className="w-4 h-4 text-[#FF5A5F]" strokeWidth={2.5} />
+            <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 shadow-sm border border-white/20">
+              <img src="./logo.jpg" alt="Logo" className="w-full h-full object-cover" />
             </div>
-            <span className="font-bold text-brand-dark tracking-tight hidden sm:block">Shorts Blocker</span>
+            <span className="font-bold text-white tracking-tight">Shorts Blocker</span>
           </div>
           
           <div className="flex items-center gap-4 sm:gap-6">
-            <span className="text-xs sm:text-sm font-medium text-brand-dark/70 hidden min-[400px]:block">
-              Product by <strong className="text-brand-dark font-bold">Esech</strong>
+            <span className="text-xs sm:text-sm font-medium text-white/80 hidden min-[400px]:block">
+              Product by <strong className="text-white font-bold">Esech</strong>
             </span>
             <a 
               href="https://github.com/hariom2008h/Block-scroll"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-light-2 hover:bg-light-3 transition-colors px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-semibold text-brand-dark shrink-0 whitespace-nowrap"
+              className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 transition-colors px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-semibold text-white border border-white/20 shrink-0 whitespace-nowrap"
             >
               <Github className="w-4 h-4" />
               <span className="hidden sm:block">GitHub Repository</span>
@@ -215,8 +223,8 @@ export default function App() {
            className="flex flex-col items-center w-full max-w-[100vw]"
         >
           {/* App Logo */}
-          <div className="w-20 h-20 sm:w-32 sm:h-32 bg-[#1A1A1A] rounded-[1.75rem] sm:rounded-[2.5rem] flex items-center justify-center shadow-2xl mb-6 sm:mb-8 relative z-10 ring-4 ring-white border border-light-2/50">
-            <Ban className="w-10 h-10 sm:w-16 sm:h-16 text-[#FF5A5F]" strokeWidth={2.5} />
+          <div className="w-20 h-20 sm:w-32 sm:h-32 rounded-[1.75rem] sm:rounded-[2.5rem] overflow-hidden shadow-2xl mb-6 sm:mb-8 relative z-10 ring-4 ring-white border border-light-2/50 bg-white">
+            <img src="./logo.jpg" alt="Shorts Blocker Logo" className="w-full h-full object-cover" />
           </div>
 
           <div className="inline-flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full bg-white border border-light-2 text-xs sm:text-sm font-bold text-brand-dark mb-6 sm:mb-8 shadow-sm">
@@ -438,58 +446,31 @@ export default function App() {
             className="flex overflow-x-auto gap-8 pb-8 snap-x snap-mandatory px-6 md:px-12 justify-start md:justify-center" style={{ scrollbarWidth: 'none' }}
           >
             
-            {/* Screenshot 1 */}
-            <div className="snap-center shrink-0 w-[240px] md:w-[280px] relative rounded-[2.5rem] overflow-hidden border-[8px] border-light-2 shadow-2xl aspect-[9/19.5] bg-light-1 flex items-center justify-center group flex-col">
-              {/* Fake Phone Notch */}
-              <div className="absolute top-0 inset-x-0 h-6 flex justify-center z-20">
-                <div className="w-1/3 h-full bg-light-2 rounded-b-2xl"></div>
+            {screenshots.length > 0 ? (
+              screenshots.map((s, idx) => {
+                const Icon = s.Icon;
+                return (
+                  <div key={idx} className="snap-center shrink-0 w-[240px] md:w-[280px] relative rounded-[2.5rem] overflow-hidden border-[8px] border-light-2 shadow-2xl aspect-[9/19.5] bg-light-1 flex items-center justify-center group flex-col">
+                    {/* Fake Phone Notch */}
+                    <div className="absolute top-0 inset-x-0 h-6 flex justify-center z-20">
+                      <div className="w-1/3 h-full bg-light-2 rounded-b-2xl"></div>
+                    </div>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-brand-dark/40 z-0 mt-8">
+                      <Icon className="w-12 h-12 mb-3 opacity-50" />
+                      <span className="font-semibold mb-1 text-lg">{s.title}</span>
+                      <span className="text-[11px] bg-light-2/60 px-3 py-1.5 rounded-full mt-3 font-mono leading-tight">public/{s.filename}</span>
+                    </div>
+                    <img src={s.url} alt={s.title} className="absolute inset-0 w-full h-full object-cover object-top z-10 transition-transform duration-500 group-hover:scale-105" onError={(e) => (e.currentTarget.style.opacity = '0')} />
+                  </div>
+                );
+              })
+            ) : (
+              <div className="flex flex-col items-center justify-center p-12 text-brand-dark/50 border-2 border-dashed border-light-2/50 rounded-[2.5rem] w-full max-w-sm mx-auto">
+                <Smartphone className="w-12 h-12 mb-4 opacity-50" />
+                <p className="text-lg font-medium">No screenshots found</p>
+                <p className="text-sm mt-2">Drop images into the public/ folder.</p>
               </div>
-              <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-brand-dark/40 z-0 mt-8">
-                <Shield className="w-12 h-12 mb-3 opacity-50" />
-                <span className="font-semibold mb-1 text-lg">Scroll Intercepted</span>
-                <span className="text-[11px] bg-light-2/60 px-3 py-1.5 rounded-full mt-3 font-mono leading-tight">Drop image here as<br/>public/ui-1.png</span>
-              </div>
-              <img src="./ui-1.png" alt="Scroll Intercepted Screen" className="absolute inset-0 w-full h-full object-cover object-top z-10 transition-transform duration-500 group-hover:scale-105" onError={(e) => (e.currentTarget.style.opacity = '0')} />
-            </div>
-
-            {/* Screenshot 2 */}
-            <div className="snap-center shrink-0 w-[240px] md:w-[280px] relative rounded-[2.5rem] overflow-hidden border-[8px] border-light-2 shadow-2xl aspect-[9/19.5] bg-light-1 flex items-center justify-center group flex-col">
-              <div className="absolute top-0 inset-x-0 h-6 flex justify-center z-20">
-                <div className="w-1/3 h-full bg-light-2 rounded-b-2xl"></div>
-              </div>
-              <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-brand-dark/40 z-0 mt-8">
-                <Smartphone className="w-12 h-12 mb-3 opacity-50" />
-                <span className="font-semibold mb-1 text-lg">Security Settings</span>
-                <span className="text-[11px] bg-light-2/60 px-3 py-1.5 rounded-full mt-3 font-mono leading-tight">Drop image here as<br/>public/ui-2.png</span>
-              </div>
-              <img src="./ui-2.png" alt="Security Settings" className="absolute inset-0 w-full h-full object-cover object-top z-10 transition-transform duration-500 group-hover:scale-105" onError={(e) => (e.currentTarget.style.opacity = '0')} />
-            </div>
-
-            {/* Screenshot 3 */}
-            <div className="snap-center shrink-0 w-[240px] md:w-[280px] relative rounded-[2.5rem] overflow-hidden border-[8px] border-light-2 shadow-2xl aspect-[9/19.5] bg-light-1 flex items-center justify-center group flex-col">
-              <div className="absolute top-0 inset-x-0 h-6 flex justify-center z-20">
-                <div className="w-1/3 h-full bg-light-2 rounded-b-2xl"></div>
-              </div>
-              <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-brand-dark/40 z-0 mt-8">
-                <Clock className="w-12 h-12 mb-3 opacity-50" />
-                <span className="font-semibold mb-1 text-lg">Target Apps</span>
-                <span className="text-[11px] bg-light-2/60 px-3 py-1.5 rounded-full mt-3 font-mono leading-tight">Drop image here as<br/>public/ui-3.png</span>
-              </div>
-              <img src="./ui-3.png" alt="Target Apps Config" className="absolute inset-0 w-full h-full object-cover object-top z-10 transition-transform duration-500 group-hover:scale-105" onError={(e) => (e.currentTarget.style.opacity = '0')} />
-            </div>
-            
-            {/* Screenshot 4 */}
-            <div className="snap-center shrink-0 w-[240px] md:w-[280px] relative rounded-[2.5rem] overflow-hidden border-[8px] border-light-2 shadow-2xl aspect-[9/19.5] bg-light-1 flex items-center justify-center group flex-col">
-              <div className="absolute top-0 inset-x-0 h-6 flex justify-center z-20">
-                <div className="w-1/3 h-full bg-light-2 rounded-b-2xl"></div>
-              </div>
-              <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-brand-dark/40 z-0 mt-8">
-                <Smartphone className="w-12 h-12 mb-3 opacity-50" />
-                <span className="font-semibold mb-1 text-lg">System & Theme</span>
-                <span className="text-[11px] bg-light-2/60 px-3 py-1.5 rounded-full mt-3 font-mono leading-tight">Drop image here as<br/>public/ui-4.png</span>
-              </div>
-              <img src="./ui-4.png" alt="System Settings" className="absolute inset-0 w-full h-full object-cover object-top z-10 transition-transform duration-500 group-hover:scale-105" onError={(e) => (e.currentTarget.style.opacity = '0')} />
-            </div>
+            )}
 
           </motion.div>
         </div>
@@ -598,19 +579,47 @@ export default function App() {
         </div>
       </section>
 
-      {/* Footer Share Section */}
-      <footer className="pb-12 text-center">
-        <motion.button
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          onClick={handleShare}
-          className="inline-flex items-center gap-2 bg-white text-brand-dark px-6 py-3 rounded-full border border-light-2 hover:bg-light-1 transition-all shadow-sm font-medium"
-        >
-          <Share2 className="w-5 h-5 text-brand-blue" />
-          Share This Page
-        </motion.button>
+      {/* Footer Creator Section */}
+      <footer className="w-full bg-gradient-to-r from-brand-blue to-brand-dark relative overflow-hidden pt-12 pb-6 flex flex-col items-center text-center text-white mt-12">
+        {/* Background artistic flairs */}
+        <div className="absolute top-0 right-0 -mr-24 -mt-24 w-72 h-72 rounded-full bg-white/10 blur-3xl pointer-events-none mix-blend-overlay" />
+        <div className="absolute bottom-0 left-0 -ml-24 -mb-24 w-72 h-72 rounded-full bg-black/20 blur-3xl pointer-events-none mix-blend-overlay" />
+
+        <div className="w-full max-w-4xl px-4 flex flex-col items-center z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col items-center w-full group"
+          >
+            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white text-lg sm:text-2xl font-bold shadow-xl mb-4 ring-2 ring-white/20 shrink-0 group-hover:scale-110 transition-transform duration-500 border border-white/30">
+               HB
+            </div>
+            
+            <h3 className="text-xl sm:text-2xl font-bold mb-2 tracking-tight drop-shadow-md">
+              Created by Hari Om Bhadana
+            </h3>
+            
+            <p className="text-white/80 text-sm sm:text-base max-w-lg mx-auto mb-6 leading-relaxed font-medium font-sans">
+              Passionate about building tools that help people regain their focus and take control.
+            </p>
+            
+            <a 
+              href="https://github.com/hariom2008h"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-white text-brand-dark px-6 py-2.5 rounded-full hover:bg-light-1 transition-all shadow-md font-bold hover:scale-105 active:scale-95 text-xs sm:text-sm"
+            >
+              <Github className="w-4 h-4" />
+              Follow on GitHub
+            </a>
+          </motion.div>
+
+          <div className="mt-8 text-xs font-medium text-white/50 w-full border-t border-white/10 pt-6 text-center">
+            &copy; {new Date().getFullYear()} Esech &middot; Hari Om Bhadana. All rights reserved.
+          </div>
+        </div>
       </footer>
       
     </div>
