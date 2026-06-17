@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Download, Shield, Smartphone, ArrowDownToLine, CheckCircle2, Clock, Share2, ChevronDown, ChevronUp, EyeOff, Ban, Github, ExternalLink } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 
 interface Asset {
   name: string;
@@ -187,9 +187,12 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
+  const { scrollY } = useScroll();
+  const headerOpacity = useTransform(scrollY, [window.innerHeight * 0.7, window.innerHeight * 0.95], [0, 1]);
+  const headerY = useTransform(scrollY, [window.innerHeight * 0.7, window.innerHeight * 0.95], [20, 0]);
+
   useEffect(() => {
     const handleScroll = () => {
-      // Trigger just before hero section fully ends
       setIsScrolled(window.scrollY > window.innerHeight * 0.85);
     };
     window.addEventListener('scroll', handleScroll);
@@ -223,11 +226,8 @@ export default function App() {
     <div className="min-h-screen bg-light-1 text-brand-dark font-sans selection:bg-brand-blue selection:text-white pb-0">
       {/* Sticky Header / Navbar */}
       <motion.header
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: isScrolled ? 0 : 20, opacity: isScrolled ? 1 : 0 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-0 inset-x-0 z-50 bg-[#0F172A]/90 backdrop-blur-md shadow-lg border-b border-light-2/10"
-        style={{ pointerEvents: isScrolled ? 'auto' : 'none' }}
+        style={{ opacity: headerOpacity, y: headerY, pointerEvents: isScrolled ? 'auto' : 'none' }}
+        className="fixed top-0 inset-x-0 z-50 bg-gradient-to-r from-brand-blue to-brand-dark shadow-lg border-b border-white/10"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-3">
