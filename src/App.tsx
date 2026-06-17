@@ -188,12 +188,12 @@ export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
 
   const { scrollY } = useScroll();
-  const headerOpacity = useTransform(scrollY, [window.innerHeight * 0.7, window.innerHeight * 0.95], [0, 1]);
-  const headerY = useTransform(scrollY, [window.innerHeight * 0.7, window.innerHeight * 0.95], [20, 0]);
+  const headerOpacity = useTransform(scrollY, [window.innerHeight * 0.6, window.innerHeight * 0.85], [0, 1]);
+  const headerY = useTransform(scrollY, [window.innerHeight * 0.6, window.innerHeight * 0.85], [10, 0]);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > window.innerHeight * 0.85);
+      setIsScrolled(window.scrollY > window.innerHeight * 0.8);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -338,11 +338,11 @@ export default function App() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <motion.div 
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
+              viewport={{ once: true, margin: "-20px" }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="bg-light-1 p-8 rounded-3xl border border-light-2 shadow-sm transition-transform hover:-translate-y-1"
+              className="bg-light-1 p-8 rounded-3xl border border-light-2 shadow-sm transition-all hover:shadow-md hover:-translate-y-1"
             >
               <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mb-6 border border-light-2 shadow-sm">
                 <Shield className="w-7 h-7 text-brand-blue" />
@@ -354,11 +354,11 @@ export default function App() {
             </motion.div>
             
             <motion.div 
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
+              viewport={{ once: true, margin: "-20px" }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="bg-light-1 p-8 rounded-3xl border border-light-2 shadow-sm transition-transform hover:-translate-y-1"
+              className="bg-light-1 p-8 rounded-3xl border border-light-2 shadow-sm transition-all hover:shadow-md hover:-translate-y-1"
             >
               <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mb-6 border border-light-2 shadow-sm">
                 <CheckCircle2 className="w-7 h-7 text-brand-blue" />
@@ -370,11 +370,11 @@ export default function App() {
             </motion.div>
             
             <motion.div 
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
+              viewport={{ once: true, margin: "-20px" }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="bg-light-1 p-8 rounded-3xl border border-light-2 shadow-sm transition-transform hover:-translate-y-1"
+              className="bg-light-1 p-8 rounded-3xl border border-light-2 shadow-sm transition-all hover:shadow-md hover:-translate-y-1"
             >
               <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mb-6 border border-light-2 shadow-sm">
                 <Smartphone className="w-7 h-7 text-brand-blue" />
@@ -386,11 +386,11 @@ export default function App() {
             </motion.div>
 
             <motion.div 
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
+              viewport={{ once: true, margin: "-20px" }}
               transition={{ duration: 0.5, delay: 0.4 }}
-              className="bg-light-1 p-8 rounded-3xl border border-light-2 shadow-sm transition-transform hover:-translate-y-1"
+              className="bg-light-1 p-8 rounded-3xl border border-light-2 shadow-sm transition-all hover:shadow-md hover:-translate-y-1"
             >
               <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mb-6 border border-light-2 shadow-sm">
                 <EyeOff className="w-7 h-7 text-brand-blue" />
@@ -473,7 +473,14 @@ export default function App() {
               screenshots.map((s, idx) => {
                 const Icon = s.Icon;
                 return (
-                  <div key={idx} className="snap-center shrink-0 w-[240px] md:w-[280px] relative rounded-[2.5rem] overflow-hidden border-[8px] border-light-2 shadow-2xl aspect-[9/19.5] bg-light-1 flex items-center justify-center group flex-col">
+                  <motion.div 
+                    key={idx} 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-20px" }}
+                    transition={{ duration: 0.5, delay: idx * 0.1 }}
+                    className="snap-center shrink-0 w-[240px] md:w-[280px] relative rounded-[2.5rem] overflow-hidden border-[8px] border-light-2 shadow-2xl aspect-[9/19.5] bg-light-1 flex items-center justify-center group flex-col"
+                  >
                     {/* Fake Phone Notch */}
                     <div className="absolute top-0 inset-x-0 h-6 flex justify-center z-20">
                       <div className="w-1/3 h-full bg-light-2 rounded-b-2xl"></div>
@@ -484,7 +491,7 @@ export default function App() {
                       <span className="text-[11px] bg-light-2/60 px-3 py-1.5 rounded-full mt-3 font-mono leading-tight">public/{s.filename}</span>
                     </div>
                     <img src={s.url} alt={s.title} className="absolute inset-0 w-full h-full object-cover object-top z-10 transition-transform duration-500 group-hover:scale-105" onError={(e) => (e.currentTarget.style.opacity = '0')} />
-                  </div>
+                  </motion.div>
                 );
               })
             ) : (
