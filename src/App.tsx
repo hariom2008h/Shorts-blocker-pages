@@ -18,6 +18,49 @@ interface Release {
   assets: Asset[];
 }
 
+function TypewriterText({ words }: { words: string[] }) {
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [currentText, setCurrentText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    const word = words[currentWordIndex];
+
+    if (isDeleting) {
+      timeout = setTimeout(() => {
+        const nextText = word.substring(0, currentText.length - 1);
+        setCurrentText(nextText);
+        if (nextText === '') {
+          setIsDeleting(false);
+          setCurrentWordIndex((prev) => (prev + 1) % words.length);
+        }
+      }, 50);
+    } else {
+      timeout = setTimeout(() => {
+        const nextText = word.substring(0, currentText.length + 1);
+        setCurrentText(nextText);
+        if (nextText === word) {
+          timeout = setTimeout(() => setIsDeleting(true), 2000);
+        }
+      }, 100);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [currentText, isDeleting, currentWordIndex, words]);
+
+  return (
+    <span className="relative inline-grid text-left">
+      {/* Invisible longest word to reserve space and prevent horizontal shifts */}
+      <span className="invisible pointer-events-none pr-3">Productivity</span>
+      <span className="absolute inset-y-0 left-0 flex items-center whitespace-nowrap">
+        <span className="bg-gradient-to-r from-brand-blue to-brand-dark bg-clip-text text-transparent">{currentText || '\u200B'}</span>
+        <span className="inline-block animate-pulse -ml-1 text-brand-dark opacity-50 font-light translate-y-[-2px]">|</span>
+      </span>
+    </span>
+  );
+}
+
 function formatBytes(bytes: number, decimals = 2) {
   if (!+bytes) return '0 Bytes';
   const k = 1024;
@@ -234,12 +277,12 @@ export default function App() {
             <span>Shorts Blocker for Android</span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-display font-extrabold tracking-tight text-brand-dark max-w-4xl mb-4 sm:mb-6 leading-[1.1] sm:leading-tight px-2 sm:px-0 break-words">
-            Reclaim Your Time & <br className="hidden md:block" />
-            <span className="bg-gradient-to-r from-brand-blue to-brand-dark bg-clip-text text-transparent">Focus</span>
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-display font-extrabold tracking-tight text-brand-dark max-w-4xl mb-6 leading-tight px-4 text-center">
+            Reclaim Your Time & <br className="hidden sm:block" />
+            <TypewriterText words={["Productivity", "Attention", "Focus"]} />
           </h1>
-          
-          <p className="text-base sm:text-lg md:text-2xl text-brand-dark/70 max-w-3xl mb-10 sm:mb-12 leading-relaxed font-medium px-2 sm:px-0">
+
+          <p className="text-base sm:text-lg md:text-xl text-brand-dark/70 max-w-2xl mb-10 sm:mb-12 leading-relaxed font-medium px-4 text-center">
             A powerful, distraction-free Android utility to regain control over your attention by elegantly stopping addictive short-form video feeds.
           </p>
 
