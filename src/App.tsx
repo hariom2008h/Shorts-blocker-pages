@@ -50,13 +50,9 @@ function TypewriterText({ words }: { words: string[] }) {
   }, [currentText, isDeleting, currentWordIndex, words]);
 
   return (
-    <span className="relative inline-grid text-left">
-      {/* Invisible longest word to reserve space and prevent horizontal shifts */}
-      <span className="invisible pointer-events-none pr-3">Productivity</span>
-      <span className="absolute inset-y-0 left-0 flex items-center whitespace-nowrap">
-        <span className="bg-gradient-to-r from-brand-blue to-brand-dark bg-clip-text text-transparent">{currentText || '\u200B'}</span>
-        <span className="inline-block animate-pulse -ml-1 text-brand-dark opacity-50 font-light translate-y-[-2px]">|</span>
-      </span>
+    <span className="inline-flex items-center">
+      <span className="bg-gradient-to-r from-brand-blue to-brand-dark bg-clip-text text-transparent pb-1">{currentText || '\u200B'}</span>
+      <span className="inline-block animate-pulse text-brand-dark opacity-40 font-light -translate-y-[2px] ml-[2px]">|</span>
     </span>
   );
 }
@@ -193,7 +189,8 @@ export default function App() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > window.innerHeight * 0.9);
+      // Trigger just before hero section fully ends
+      setIsScrolled(window.scrollY > window.innerHeight * 0.85);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -228,8 +225,8 @@ export default function App() {
       <motion.header
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: isScrolled ? 0 : 20, opacity: isScrolled ? 1 : 0 }}
-        transition={{ duration: 0.4, ease: 'easeOut' }}
-        className="fixed top-0 inset-x-0 z-50 bg-gradient-to-r from-brand-blue to-brand-dark shadow-md pointer-events-auto"
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        className="fixed top-0 inset-x-0 z-50 bg-[#0F172A]/90 backdrop-blur-md shadow-lg border-b border-light-2/10"
         style={{ pointerEvents: isScrolled ? 'auto' : 'none' }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
@@ -264,44 +261,62 @@ export default function App() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[600px] bg-gradient-to-b from-brand-blue/5 via-transparent to-transparent opacity-100 pointer-events-none -z-10 blur-3xl mix-blend-multiply" />
         
         <motion.div
-           initial={{ opacity: 0, y: 20 }}
+           initial={{ opacity: 0, y: 30 }}
            animate={{ opacity: 1, y: 0 }}
            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-           className="flex flex-col items-center w-full max-w-[100vw]"
+           className="flex flex-col items-center justify-center w-full max-w-[100vw] mt-[-5dvh]"
         >
-          {/* App Logo */}
-          <div className="w-20 h-20 sm:w-32 sm:h-32 rounded-[1.75rem] sm:rounded-[2.5rem] overflow-hidden shadow-2xl mb-6 sm:mb-8 relative z-10 ring-4 ring-white border border-light-2/50 bg-white">
-            <img src="./logo.jpg" alt="Shorts Blocker Logo" className="w-full h-full object-cover" />
-          </div>
-
-          <div className="inline-flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full bg-white border border-light-2 text-xs sm:text-sm font-bold text-brand-dark mb-6 sm:mb-8 shadow-sm">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-white border border-light-2 text-[11px] sm:text-xs md:text-sm font-bold text-brand-dark mb-8 shadow-sm">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-blue"></span>
+            </span>
             <span>Shorts Blocker for Android</span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-display font-extrabold tracking-tight text-brand-dark max-w-4xl mb-6 leading-tight px-4 text-center">
-            Reclaim Your Time & <br className="hidden sm:block" />
-            <TypewriterText words={["Productivity", "Attention", "Focus"]} />
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-extrabold tracking-tight text-brand-dark max-w-4xl mb-6 leading-[1.1] sm:leading-[1.15] px-2 text-center flex flex-col items-center">
+            <span className="block mb-2 text-brand-dark">Stop endless scrolling.</span>
+            <span className="flex flex-wrap justify-center items-center gap-x-2 gap-y-1">
+              <span className="text-brand-dark">Reclaim your</span>
+              <span className="flex items-center justify-center min-w-[3.5em] text-left">
+                 <TypewriterText words={["Focus.", "Time.", "Attention."]} />
+              </span>
+            </span>
           </h1>
 
-          <p className="text-base sm:text-lg md:text-xl text-brand-dark/70 max-w-2xl mb-10 sm:mb-12 leading-relaxed font-medium px-4 text-center">
-            A powerful, distraction-free Android utility to regain control over your attention by elegantly stopping addictive short-form video feeds.
+          <p className="text-[15px] sm:text-lg md:text-xl text-brand-dark/60 max-w-2xl mb-10 leading-relaxed font-medium px-6 text-center">
+            A minimalist utility to block addictive short-form video feeds and regain control over your digital habits.
           </p>
 
-          {loading ? (
-            <div className="h-14 w-64 sm:h-16 sm:w-80 bg-light-2 animate-pulse rounded-full" />
-          ) : latestApk ? (
-            <a
-              href={latestApk.browser_download_url}
-              className="inline-flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-brand-blue to-brand-dark text-white px-6 py-4 sm:px-8 sm:py-5 rounded-full text-base sm:text-lg font-semibold hover:opacity-90 transition-all shadow-lg hover:shadow-brand-blue/30 hover:-translate-y-0.5 active:translate-y-0 text-center"
-            >
-              <Download className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" />
-              <span>Download Latest APK</span>
-            </a>
-          ) : (
-            <div className="text-brand-dark/60 font-medium px-6 py-3 sm:px-8 sm:py-4 bg-light-2 border border-light-2/50 rounded-full inline-flex items-center gap-2 text-sm sm:text-base text-center">
-              Releases temporarily unavailable
+          <div className="flex flex-col items-center gap-6 w-full px-4">
+            {/* App Logo and Name */}
+            <div className="flex items-center gap-3 sm:gap-4 px-4 py-2 sm:px-5 sm:py-3 rounded-[1.25rem] bg-white border border-light-2/60 shadow-sm">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden shadow-sm shadow-brand-blue/10 border border-light-2/20 bg-white p-[2px] shrink-0">
+                <div className="w-full h-full rounded-[0.8rem] overflow-hidden bg-light-1">
+                   <img src="./logo.jpg" alt="Logo" className="w-full h-full object-cover" />
+                </div>
+              </div>
+              <span className="text-lg sm:text-xl md:text-2xl font-display font-extrabold text-brand-dark tracking-tight pr-2">Shorts Blocker</span>
             </div>
-          )}
+
+            <div className="flex w-full sm:w-auto">
+              {loading ? (
+                <div className="h-14 w-full sm:w-64 bg-light-2 animate-pulse rounded-full" />
+              ) : latestApk ? (
+                <a
+                  href={latestApk.browser_download_url}
+                  className="w-full sm:w-auto inline-flex justify-center items-center gap-2 sm:gap-3 bg-gradient-to-r from-brand-blue to-brand-dark text-white px-8 py-4 sm:px-8 sm:py-4 rounded-full text-base sm:text-lg font-semibold hover:opacity-90 transition-all shadow-[0_8px_30px_rgb(59,130,246,0.2)] hover:shadow-[0_8px_30px_rgb(59,130,246,0.3)] hover:-translate-y-0.5 active:translate-y-0"
+                >
+                  <Download className="w-5 h-5 shrink-0" />
+                  <span>Download Latest APK</span>
+                </a>
+              ) : (
+                <div className="w-full sm:w-auto text-brand-dark/60 font-medium px-6 py-3 sm:px-8 sm:py-4 bg-light-2 border border-light-2/50 rounded-full inline-flex justify-center items-center gap-2 text-sm sm:text-base text-center">
+                  Releases temporarily unavailable
+                </div>
+              )}
+            </div>
+          </div>
         </motion.div>
       </section>
 
