@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Download, Shield, Smartphone, ArrowDownToLine, CheckCircle2, Clock, Share2, ChevronDown, ChevronUp, EyeOff, Ban } from 'lucide-react';
+import { Download, Shield, Smartphone, ArrowDownToLine, CheckCircle2, Clock, Share2, ChevronDown, ChevronUp, EyeOff, Ban, Github, ExternalLink } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -117,6 +117,15 @@ export default function App() {
   const [releases, setReleases] = useState<Release[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > window.innerHeight * 0.3);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     async function fetchReleases() {
@@ -161,6 +170,39 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-light-1 text-brand-dark font-sans selection:bg-brand-blue selection:text-white pb-12">
+      {/* Sticky Header / Navbar */}
+      <motion.header
+        initial={{ y: -100 }}
+        animate={{ y: isScrolled ? 0 : -100 }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
+        className="fixed top-0 inset-x-0 z-50 bg-white/90 backdrop-blur-md border-b border-light-2 shadow-sm"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-8 h-8 bg-[#1A1A1A] rounded-xl flex items-center justify-center border border-light-2/50 shrink-0">
+              <Ban className="w-4 h-4 text-[#FF5A5F]" strokeWidth={2.5} />
+            </div>
+            <span className="font-bold text-brand-dark tracking-tight hidden sm:block">Shorts Blocker</span>
+          </div>
+          
+          <div className="flex items-center gap-4 sm:gap-6">
+            <span className="text-xs sm:text-sm font-medium text-brand-dark/70 hidden min-[400px]:block">
+              Product by <strong className="text-brand-dark font-bold">Esech</strong>
+            </span>
+            <a 
+              href="https://github.com/hariom2008h/Block-scroll"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-light-2 hover:bg-light-3 transition-colors px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-semibold text-brand-dark shrink-0 whitespace-nowrap"
+            >
+              <Github className="w-4 h-4" />
+              <span className="hidden sm:block">GitHub Repository</span>
+              <span className="sm:hidden">GitHub</span>
+            </a>
+          </div>
+        </div>
+      </motion.header>
+
       {/* Hero Section */}
       <section className="relative px-4 sm:px-6 py-16 sm:py-20 min-h-[100dvh] flex flex-col items-center justify-center text-center overflow-hidden w-full">
         {/* Subtle, soft radial background glow */}
