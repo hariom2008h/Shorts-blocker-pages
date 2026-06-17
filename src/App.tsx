@@ -193,7 +193,7 @@ export default function App() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > window.innerHeight * 0.3);
+      setIsScrolled(window.scrollY > window.innerHeight * 0.9);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -226,10 +226,11 @@ export default function App() {
     <div className="min-h-screen bg-light-1 text-brand-dark font-sans selection:bg-brand-blue selection:text-white pb-0">
       {/* Sticky Header / Navbar */}
       <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: isScrolled ? 0 : -100 }}
-        transition={{ duration: 0.3, ease: 'easeOut' }}
-        className="fixed top-0 inset-x-0 z-50 bg-gradient-to-r from-brand-blue to-brand-dark shadow-md"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: isScrolled ? 0 : 20, opacity: isScrolled ? 1 : 0 }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+        className="fixed top-0 inset-x-0 z-50 bg-gradient-to-r from-brand-blue to-brand-dark shadow-md pointer-events-auto"
+        style={{ pointerEvents: isScrolled ? 'auto' : 'none' }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-3">
