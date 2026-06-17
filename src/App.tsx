@@ -407,7 +407,7 @@ export default function App() {
                 <span className="font-semibold mb-1 text-lg">Scroll Intercepted</span>
                 <span className="text-[11px] bg-light-2/60 px-3 py-1.5 rounded-full mt-3 font-mono leading-tight">Drop image here as<br/>public/ui-1.png</span>
               </div>
-              <img src="/ui-1.png" alt="Scroll Intercepted Screen" className="absolute inset-0 w-full h-full object-cover object-top z-10 transition-transform duration-500 group-hover:scale-105" onError={(e) => (e.currentTarget.style.opacity = '0')} />
+              <img src="./ui-1.png" alt="Scroll Intercepted Screen" className="absolute inset-0 w-full h-full object-cover object-top z-10 transition-transform duration-500 group-hover:scale-105" onError={(e) => (e.currentTarget.style.opacity = '0')} />
             </div>
 
             {/* Screenshot 2 */}
@@ -420,7 +420,7 @@ export default function App() {
                 <span className="font-semibold mb-1 text-lg">Security Settings</span>
                 <span className="text-[11px] bg-light-2/60 px-3 py-1.5 rounded-full mt-3 font-mono leading-tight">Drop image here as<br/>public/ui-2.png</span>
               </div>
-              <img src="/ui-2.png" alt="Security Settings" className="absolute inset-0 w-full h-full object-cover object-top z-10 transition-transform duration-500 group-hover:scale-105" onError={(e) => (e.currentTarget.style.opacity = '0')} />
+              <img src="./ui-2.png" alt="Security Settings" className="absolute inset-0 w-full h-full object-cover object-top z-10 transition-transform duration-500 group-hover:scale-105" onError={(e) => (e.currentTarget.style.opacity = '0')} />
             </div>
 
             {/* Screenshot 3 */}
@@ -433,7 +433,7 @@ export default function App() {
                 <span className="font-semibold mb-1 text-lg">Target Apps</span>
                 <span className="text-[11px] bg-light-2/60 px-3 py-1.5 rounded-full mt-3 font-mono leading-tight">Drop image here as<br/>public/ui-3.png</span>
               </div>
-              <img src="/ui-3.png" alt="Target Apps Config" className="absolute inset-0 w-full h-full object-cover object-top z-10 transition-transform duration-500 group-hover:scale-105" onError={(e) => (e.currentTarget.style.opacity = '0')} />
+              <img src="./ui-3.png" alt="Target Apps Config" className="absolute inset-0 w-full h-full object-cover object-top z-10 transition-transform duration-500 group-hover:scale-105" onError={(e) => (e.currentTarget.style.opacity = '0')} />
             </div>
             
             {/* Screenshot 4 */}
@@ -446,7 +446,7 @@ export default function App() {
                 <span className="font-semibold mb-1 text-lg">System & Theme</span>
                 <span className="text-[11px] bg-light-2/60 px-3 py-1.5 rounded-full mt-3 font-mono leading-tight">Drop image here as<br/>public/ui-4.png</span>
               </div>
-              <img src="/ui-4.png" alt="System Settings" className="absolute inset-0 w-full h-full object-cover object-top z-10 transition-transform duration-500 group-hover:scale-105" onError={(e) => (e.currentTarget.style.opacity = '0')} />
+              <img src="./ui-4.png" alt="System Settings" className="absolute inset-0 w-full h-full object-cover object-top z-10 transition-transform duration-500 group-hover:scale-105" onError={(e) => (e.currentTarget.style.opacity = '0')} />
             </div>
 
           </motion.div>
