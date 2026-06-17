@@ -75,25 +75,28 @@ function ReleaseNotes({ body, noBox = false }: { body: string; noBox?: boolean }
   );
 }
 
-function FAQItem({ question, answer, delay }: { question: string, answer: string, delay: number }) {
+function FAQItem({ question, answer, delay, index }: { question: string, answer: string, delay: number, index: number }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, x: 20 }}
+      whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: "-20px" }}
       transition={{ duration: 0.5, delay }}
-      className="bg-white border border-light-2 rounded-2xl overflow-hidden shadow-sm"
+      className={`border-b border-light-2/60 overflow-hidden last:border-0 ${isOpen ? 'bg-light-1/50 rounded-2xl border-transparent px-2 md:px-6 my-4 shadow-sm' : ''} transition-all duration-300`}
     >
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full text-left px-6 py-5 flex items-center justify-between focus:outline-none focus-visible:bg-light-1/50 transition-colors hover:bg-light-1/50"
+        className={`w-full text-left py-6 flex items-center justify-between focus:outline-none transition-all ${isOpen ? 'px-4' : ''}`}
       >
-        <span className="font-semibold text-lg text-brand-dark pr-4">{question}</span>
-        <ChevronDown 
-          className={`w-5 h-5 text-brand-dark/50 shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} 
-        />
+        <div className="flex items-start md:items-center gap-4 md:gap-6 w-full">
+          <span className="text-sm font-bold text-brand-blue/50 font-mono mt-1 md:mt-0 shrink-0">0{index + 1}</span>
+          <span className="font-bold text-[1.1rem] md:text-xl text-brand-dark pr-4 leading-snug flex-1">{question}</span>
+        </div>
+        <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${isOpen ? 'bg-gradient-to-r from-brand-blue to-brand-dark text-white shadow-md rotate-180' : 'bg-light-2 text-brand-dark hover:bg-light-3'}`}>
+            <ChevronDown className="w-5 h-5 transition-transform duration-300" />
+        </div>
       </button>
       <AnimatePresence>
         {isOpen && (
@@ -103,7 +106,7 @@ function FAQItem({ question, answer, delay }: { question: string, answer: string
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
           >
-            <div className="px-6 pb-5 pt-1 text-brand-dark/70 font-medium leading-relaxed border-t border-light-2/30 mt-2 mx-6">
+            <div className="px-4 pb-6 md:pl-16 text-brand-dark/70 font-medium leading-relaxed mt-2 text-base md:text-lg">
               {answer}
             </div>
           </motion.div>
@@ -342,45 +345,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* Frequently Asked Questions Section */}
-      <section className="py-24 bg-light-3/50 border-t border-light-2/50 relative overflow-hidden">
-        <div className="max-w-4xl mx-auto px-6">
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.6 }}
-            className="mb-16 text-center"
-          >
-            <h2 className="text-4xl font-display font-bold text-brand-dark tracking-tight mb-4">Frequently Asked Questions</h2>
-            <p className="text-brand-dark/60 text-lg font-medium">Common questions about functionality, privacy, and accessibility.</p>
-          </motion.div>
-
-          <div className="space-y-4">
-            <FAQItem 
-              question="Why does Shorts Blocker need Accessibility permissions?"
-              answer="Shorts Blocker uses Android's Accessibility Services to detect when you are scrolling through short-form video feeds (like YouTube Shorts or Instagram Reels). This permission is required to analyze the screen content and intercept the scroll event with our custom overlay."
-              delay={0.1}
-            />
-            <FAQItem 
-              question="Does the app collect or track my personal data?"
-              answer="Absolutely not. Privacy is our core principle. The Accessibility service only monitors for specific UI elements related to short-form video scroll feeds. All processing happens locally on your device, and we do not collect, store, or transmit any of your personal data or browsing history."
-              delay={0.2}
-            />
-            <FAQItem 
-              question="Can I easily bypass the block?"
-              answer="Shorts Blocker is built with 'friction-by-design'. When you try to access a blocked feed, you must enter a complex master password. The goal isn't to lock your phone down completely, but to introduce enough friction to break the subconscious dopamine loop."
-              delay={0.3}
-            />
-            <FAQItem 
-              question="Will it block regular YouTube videos?"
-              answer="No! Our smart interception technology only targets the 'Shorts' UI. You can still watch proper, long-form educational or entertainment videos without any interruptions. The app distinguishes between short-form feeds and standard video players."
-              delay={0.4}
-            />
-          </div>
-        </div>
-      </section>
-
       {/* About Latest Version Section */}
       {!loading && !error && latestRelease && (
         <section className="py-20 bg-white border-y border-light-2/50">
@@ -473,6 +437,76 @@ export default function App() {
             )}
 
           </motion.div>
+        </div>
+      </section>
+
+      {/* Frequently Asked Questions Section */}
+      <section className="py-24 bg-light-1 border-t border-light-2/50 relative overflow-hidden">
+        <div className="absolute top-0 right-0 -mr-40 -mt-40 w-96 h-96 rounded-full bg-brand-blue/5 blur-3xl pointer-events-none" />
+        
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start">
+            
+            <div className="lg:col-span-5 lg:sticky lg:top-32 relative z-10">
+              <motion.div 
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.6 }}
+              >
+                <div className="w-16 h-16 bg-white rounded-2xl shadow-sm border border-light-2 flex items-center justify-center mb-6">
+                  <Shield className="w-8 h-8 text-brand-blue" />
+                </div>
+                <h2 className="text-4xl md:text-5xl font-display font-extrabold text-brand-dark tracking-tight mb-4 leading-tight">
+                  Got Questions? <br/>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-brand-dark">We've Got Answers.</span>
+                </h2>
+                <p className="text-brand-dark/70 text-lg md:text-xl font-medium leading-relaxed max-w-md">
+                  Everything you need to know about how Shorts Blocker works, privacy, and technical details.
+                </p>
+                
+                <div className="mt-10 hidden lg:block">
+                  <div className="p-6 bg-white border border-light-2 rounded-3xl shadow-sm inline-block">
+                     <p className="font-semibold text-brand-dark mb-1">Still need help?</p>
+                     <p className="text-sm text-brand-dark/60 mb-4">Reach out on GitHub repository issues.</p>
+                     <a href="https://github.com/hariom2008h" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 font-bold text-sm bg-light-2 hover:bg-light-3 px-4 py-2 rounded-full transition-colors text-brand-dark">
+                       <Github className="w-4 h-4"/> Talk to us
+                     </a>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+
+            <div className="lg:col-span-7 z-10">
+              <div className="bg-white rounded-[2rem] p-6 md:p-10 shadow-xl shadow-brand-dark/5 border border-light-2">
+                <FAQItem 
+                  index={0}
+                  question="Why does Shorts Blocker need Accessibility permissions?"
+                  answer="Shorts Blocker uses Android's Accessibility Services to detect when you are scrolling through short-form video feeds (like YouTube Shorts or Instagram Reels). This permission is required to analyze the screen content and intercept the scroll event with our custom overlay."
+                  delay={0.1}
+                />
+                <FAQItem 
+                  index={1}
+                  question="Does the app collect or track my personal data?"
+                  answer="Absolutely not. Privacy is our core principle. The Accessibility service only monitors for specific UI elements related to short-form video scroll feeds. All processing happens locally on your device, and we do not collect, store, or transmit any of your personal data or browsing history."
+                  delay={0.2}
+                />
+                <FAQItem 
+                  index={2}
+                  question="Can I easily bypass the block?"
+                  answer="Shorts Blocker is built with 'friction-by-design'. When you try to access a blocked feed, you must enter a complex master password. The goal isn't to lock your phone down completely, but to introduce enough friction to break the subconscious dopamine loop."
+                  delay={0.3}
+                />
+                <FAQItem 
+                  index={3}
+                  question="Will it block regular YouTube videos?"
+                  answer="No! Our smart interception technology only targets the 'Shorts' UI. You can still watch proper, long-form educational or entertainment videos without any interruptions. The app distinguishes between short-form feeds and standard video players."
+                  delay={0.4}
+                />
+              </div>
+            </div>
+            
+          </div>
         </div>
       </section>
 
@@ -593,11 +627,16 @@ export default function App() {
             transition={{ duration: 0.5 }}
             className="flex flex-col items-center w-full group"
           >
-            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white text-lg sm:text-2xl font-bold shadow-xl mb-4 ring-2 ring-white/20 shrink-0 group-hover:scale-110 transition-transform duration-500 border border-white/30">
-               HB
+            <div className="flex items-center gap-3 mb-4 group-hover:scale-105 transition-transform duration-300">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-xl flex items-center justify-center overflow-hidden shadow-xl shadow-brand-dark/20 ring-1 ring-white/20">
+                <img src="./logo.jpg" alt="Shorts Blocker" className="w-full h-full object-cover" />
+              </div>
+              <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white drop-shadow-md">
+                Shorts Blocker
+              </span>
             </div>
             
-            <h3 className="text-xl sm:text-2xl font-bold mb-2 tracking-tight drop-shadow-md">
+            <h3 className="text-base sm:text-lg font-medium mb-3 tracking-tight text-white/80">
               Created by Hari Om Bhadana
             </h3>
             
