@@ -680,7 +680,7 @@ export default function App() {
       </section>
 
       {/* Footer Creator Section */}
-      <footer className="w-full bg-gradient-to-r from-brand-blue to-brand-dark relative overflow-hidden pt-12 pb-6 flex flex-col items-center text-center text-white mt-12">
+      <footer className="w-full bg-black relative overflow-hidden pt-12 pb-6 flex flex-col items-center text-center text-white mt-12">
         {/* Background artistic flairs */}
         <div className="absolute top-0 right-0 -mr-24 -mt-24 w-72 h-72 rounded-full bg-white/10 blur-3xl pointer-events-none mix-blend-overlay" />
         <div className="absolute bottom-0 left-0 -ml-24 -mb-24 w-72 h-72 rounded-full bg-black/20 blur-3xl pointer-events-none mix-blend-overlay" />
