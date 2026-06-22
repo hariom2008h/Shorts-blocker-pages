@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Download, Shield, Smartphone, ArrowDownToLine, CheckCircle2, Clock, Share2, ChevronDown, ChevronUp, EyeOff, Ban, Github, ExternalLink } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 
 interface Asset {
@@ -78,6 +79,7 @@ function ReleaseNotes({ body, noBox = false }: { body: string; noBox?: boolean }
         className={`markdown-body flex flex-col gap-2 font-sans text-[15px] leading-relaxed opacity-90 ${!expanded && isLong ? 'max-h-32 overflow-hidden relative' : ''}`}
       >
         <ReactMarkdown
+          rehypePlugins={[rehypeRaw]}
           components={{
             h1: ({node, ...props}) => <h1 className="text-xl font-bold mt-4 mb-2" {...props} />,
             h2: ({node, ...props}) => <h2 className="text-lg font-bold mt-4 mb-2" {...props} />,
@@ -85,9 +87,11 @@ function ReleaseNotes({ body, noBox = false }: { body: string; noBox?: boolean }
             p: ({node, ...props}) => <p className="mb-2" {...props} />,
             ul: ({node, ...props}) => <ul className="list-disc pl-5 mb-2 space-y-1" {...props} />,
             li: ({node, ...props}) => <li className="" {...props} />,
-            a: ({node, ...props}) => <a className="text-brand-blue hover:underline" {...props} />,
+            a: ({node, ...props}) => <a className="text-brand-blue hover:underline break-all" {...props} />,
             code: ({node, ...props}) => <code className="bg-light-2/50 px-1.5 py-0.5 rounded font-mono text-sm" {...props} />,
             strong: ({node, ...props}) => <strong className="font-bold" {...props} />,
+            img: ({node, ...props}) => <img className="inline-block max-w-full m-1" {...props} />,
+            div: ({node, ...props}) => <div className="my-2 max-w-full overflow-hidden" {...props} />,
           }}
         >
           {body || 'No release notes provided.'}
