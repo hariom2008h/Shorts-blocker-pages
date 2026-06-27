@@ -162,7 +162,7 @@ function FAQItem({ question, answer, delay, index }: { question: string, answer:
 const imageModules = import.meta.glob('/public/*.{png,jpg,jpeg,webp}', { eager: true, query: '?url', import: 'default' });
 
 const screenshots = Object.keys(imageModules)
-  .filter(key => !key.endsWith('logo.jpg') && !key.endsWith('favicon.ico'))
+  .filter(key => !key.endsWith('logo.jpg') && !key.endsWith('favicon.ico') && !key.endsWith('web-preview.png'))
   .map(key => {
     const filename = key.replace('/public/', '');
     let title = "App Screen";
