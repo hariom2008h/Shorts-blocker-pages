@@ -190,6 +190,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showAllVersions, setShowAllVersions] = useState(false);
 
   const { scrollY } = useScroll();
   const headerOpacity = useTransform(scrollY, [window.innerHeight * 0.6, window.innerHeight * 0.85], [0, 1]);
@@ -614,7 +615,7 @@ export default function App() {
 
           {!loading && !error && releases.length > 1 && (
             <div className="space-y-6">
-              {releases.slice(1).map((release, index) => {
+              {(showAllVersions ? releases.slice(1) : releases.slice(1, 2)).map((release, index) => {
                 const apkAsset = release.assets.find(a => a.name.endsWith('.apk'));
                 const isLatest = false;
 
@@ -678,6 +679,21 @@ export default function App() {
                   </motion.div>
                 );
               })}
+              
+              {releases.length > 2 && (
+                <div className="mt-8 flex justify-center">
+                  <button 
+                    onClick={() => setShowAllVersions(!showAllVersions)}
+                    className="flex items-center gap-2 px-6 py-3 bg-white border border-light-2 rounded-full font-semibold text-brand-dark hover:bg-light-1 transition-colors shadow-sm"
+                  >
+                    {showAllVersions ? (
+                      <>Show Less <ChevronUp className="w-4 h-4" /></>
+                    ) : (
+                      <>Show More <ChevronDown className="w-4 h-4" /></>
+                    )}
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
