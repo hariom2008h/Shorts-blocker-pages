@@ -1,8 +1,11 @@
+/// <reference types="vite/client" />
 import { useEffect, useState } from 'react';
-import { Download, Shield, Smartphone, ArrowDownToLine, CheckCircle2, Clock, Share2, ChevronDown, ChevronUp, EyeOff, Ban, Github, ExternalLink } from 'lucide-react';
+import { Download, Shield, Smartphone, ArrowDownToLine, CheckCircle2, Clock, ChevronDown, ChevronUp, EyeOff, Github } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
+import { HelpPage } from './components/HelpPage';
+import { PrivacyPolicyPage } from './components/PrivacyPolicyPage';
 
 interface Asset {
   name: string;
@@ -191,10 +194,49 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showAllVersions, setShowAllVersions] = useState(false);
+  const resolvePageFromUrl = (): 'home' | 'help' | 'privacy' => {
+    const hash = window.location.hash.toLowerCase().replace(/^#\/?/, '');
+    const params = new URLSearchParams(window.location.search.toLowerCase());
+    const queryPage = params.get('page');
+
+    if (hash === 'privacy' || hash === 'privacy-policy' || queryPage === 'privacy') {
+      return 'privacy';
+    }
+    if (hash === 'help' || hash === 'support' || queryPage === 'help') {
+      return 'help';
+    }
+    return 'home';
+  };
+
+  const [activePage, setActivePage] = useState<'home' | 'help' | 'privacy'>(resolvePageFromUrl);
 
   const { scrollY } = useScroll();
   const headerOpacity = useTransform(scrollY, [window.innerHeight * 0.6, window.innerHeight * 0.85], [0, 1]);
   const headerY = useTransform(scrollY, [window.innerHeight * 0.6, window.innerHeight * 0.85], [10, 0]);
+
+  const openLegalPage = (page: 'help' | 'privacy') => {
+    setActivePage(page);
+    window.history.pushState(null, '', `#${page}`);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const backToHome = () => {
+    setActivePage('home');
+    window.history.pushState(null, '', window.location.pathname);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    const handleUrlChange = () => {
+      setActivePage(resolvePageFromUrl());
+    };
+    window.addEventListener('hashchange', handleUrlChange);
+    window.addEventListener('popstate', handleUrlChange);
+    return () => {
+      window.removeEventListener('hashchange', handleUrlChange);
+      window.removeEventListener('popstate', handleUrlChange);
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -225,7 +267,24 @@ export default function App() {
 
   const latestRelease = releases.length > 0 ? releases[0] : null;
   const latestApk = latestRelease?.assets.find(a => a.name.endsWith('.apk'));
-  const latestApkSizeMB = latestApk ? (latestApk.size / (1024 * 1024)).toFixed(1) : null;
+
+  if (activePage === 'help') {
+    return (
+      <HelpPage
+        onBackToHome={backToHome}
+        onNavigateToPrivacy={() => openLegalPage('privacy')}
+      />
+    );
+  }
+
+  if (activePage === 'privacy') {
+    return (
+      <PrivacyPolicyPage
+        onBackToHome={backToHome}
+        onNavigateToHelp={() => openLegalPage('help')}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-light-1 text-brand-dark font-sans selection:bg-brand-blue selection:text-white pb-0">
@@ -234,15 +293,30 @@ export default function App() {
         style={{ opacity: headerOpacity, y: headerY, pointerEvents: isScrolled ? 'auto' : 'none' }}
         className="fixed top-0 inset-x-0 z-50 bg-gradient-to-r from-brand-blue to-brand-dark shadow-lg border-b border-white/10"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2 sm:gap-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-8">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 shadow-sm border border-white/20">
               <img src="./logo.jpg" alt="Logo" className="w-full h-full object-cover" />
             </div>
-            <span className="font-bold text-white tracking-tight">Shorts Blocker</span>
+            <span className="font-bold text-white tracking-tight whitespace-nowrap">Shorts Blocker</span>
           </div>
           
-          <div className="flex items-center gap-4 sm:gap-6">
+          <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-white/85">
+            <button
+              onClick={() => openLegalPage('help')}
+              className="hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+            >
+              Help Center
+            </button>
+            <button
+              onClick={() => openLegalPage('privacy')}
+              className="hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+            >
+              Privacy Policy
+            </button>
+          </nav>
+
+          <div className="flex items-center gap-4 sm:gap-6 shrink-0">
             <span className="text-xs sm:text-sm font-medium text-white/80 hidden min-[400px]:block">
               Product by <strong className="text-white font-bold">Esech</strong>
             </span>
@@ -539,10 +613,13 @@ export default function App() {
                 <div className="mt-10 hidden lg:block">
                   <div className="p-6 bg-white border border-light-2 rounded-3xl shadow-sm inline-block">
                      <p className="font-semibold text-brand-dark mb-1">Still need help?</p>
-                     <p className="text-sm text-brand-dark/60 mb-4">Reach out on GitHub repository issues.</p>
-                     <a href="https://github.com/hariom2008h" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 font-bold text-sm bg-light-2 hover:bg-light-3 px-4 py-2 rounded-full transition-colors text-brand-dark">
-                       <Github className="w-4 h-4"/> Talk to us
-                     </a>
+                     <p className="text-sm text-brand-dark/60 mb-4">Read our setup guide or reach out on GitHub.</p>
+                     <button
+                       onClick={() => openLegalPage('help')}
+                       className="inline-flex items-center gap-2 font-bold text-sm bg-light-2 hover:bg-light-3 px-4 py-2 rounded-full transition-colors text-brand-dark cursor-pointer"
+                     >
+                       Visit Help Center
+                     </button>
                   </div>
                 </div>
               </motion.div>
@@ -741,8 +818,32 @@ export default function App() {
             </a>
           </motion.div>
 
-          <div className="mt-8 text-xs font-medium text-white/50 w-full border-t border-white/10 pt-6 text-center">
-            &copy; {new Date().getFullYear()} Esech &middot; Hari Om Bhadana. All rights reserved.
+          <div className="mt-8 text-xs font-medium text-white/60 w-full border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <span>&copy; {new Date().getFullYear()} Esech &middot; Hari Om Bhadana. All rights reserved.</span>
+            <div className="flex items-center gap-5 text-white/75">
+              <button
+                onClick={() => openLegalPage('help')}
+                className="hover:text-white transition-colors cursor-pointer whitespace-nowrap"
+              >
+                Help Center
+              </button>
+              <span aria-hidden="true">&middot;</span>
+              <button
+                onClick={() => openLegalPage('privacy')}
+                className="hover:text-white transition-colors cursor-pointer whitespace-nowrap"
+              >
+                Privacy Policy
+              </button>
+              <span aria-hidden="true">&middot;</span>
+              <a
+                href="https://github.com/hariom2008h/Block-scroll/issues"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white transition-colors whitespace-nowrap"
+              >
+                Report Issue
+              </a>
+            </div>
           </div>
         </div>
       </footer>
