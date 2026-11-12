@@ -1,8 +1,8 @@
 {
   "name": "shorts-blocker",
   "private": true,
-  "version": "1.0.17",
-  "versionCode": 17,
+  "version": "1.0.19",
+  "versionCode": 19,
   "type": "module",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",

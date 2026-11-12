@@ -3,10 +3,12 @@ import { ArrowLeft } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface PrivacyPolicyPageProps {
+  showBackButton?: boolean;
   onNavigateToHelp: () => void;
 }
 
 export function PrivacyPolicyPage({
+  showBackButton = false,
   onNavigateToHelp,
 }: PrivacyPolicyPageProps) {
   useEffect(() => {
@@ -19,14 +21,16 @@ export function PrivacyPolicyPage({
       <header className="sticky top-0 z-50 bg-gradient-to-r from-brand-blue to-brand-dark shadow-md border-b border-white/10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
           <div className="inline-flex items-center gap-3 text-white whitespace-nowrap shrink-0">
-            <button
-              type="button"
-              onClick={() => window.history.back()}
-              aria-label="Go back"
-              className="w-9 h-9 rounded-full flex items-center justify-center text-white/85 hover:text-white hover:bg-white/10 active:bg-white/15 transition-colors cursor-pointer shrink-0"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
+            {showBackButton && (
+              <button
+                type="button"
+                onClick={() => window.history.back()}
+                aria-label="Go back"
+                className="w-9 h-9 rounded-full flex items-center justify-center text-white/85 hover:text-white hover:bg-white/10 active:bg-white/15 transition-colors cursor-pointer shrink-0"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+            )}
             <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 shadow-sm border border-white/20">
               <img
                 src="./logo.jpg"

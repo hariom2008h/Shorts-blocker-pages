@@ -6,6 +6,7 @@ import rehypeRaw from 'rehype-raw';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 import { HelpPage } from './components/HelpPage';
 import { PrivacyPolicyPage } from './components/PrivacyPolicyPage';
+import { applyPageSeo } from './utils/seo';
 
 interface Asset {
   name: string;
@@ -209,12 +210,20 @@ export default function App() {
   };
 
   const [activePage, setActivePage] = useState<'home' | 'help' | 'privacy'>(resolvePageFromUrl);
+  const [navigatedFromHome, setNavigatedFromHome] = useState(false);
+
+  useEffect(() => {
+    applyPageSeo(activePage);
+  }, [activePage]);
 
   const { scrollY } = useScroll();
   const headerOpacity = useTransform(scrollY, [window.innerHeight * 0.6, window.innerHeight * 0.85], [0, 1]);
   const headerY = useTransform(scrollY, [window.innerHeight * 0.6, window.innerHeight * 0.85], [10, 0]);
 
-  const openLegalPage = (page: 'help' | 'privacy') => {
+  const openLegalPage = (page: 'help' | 'privacy', fromHome = true) => {
+    if (fromHome) {
+      setNavigatedFromHome(true);
+    }
     setActivePage(page);
     window.history.pushState(null, '', `#${page}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -222,7 +231,11 @@ export default function App() {
 
   useEffect(() => {
     const handleUrlChange = () => {
-      setActivePage(resolvePageFromUrl());
+      const next = resolvePageFromUrl();
+      setActivePage(next);
+      if (next === 'home') {
+        setNavigatedFromHome(false);
+      }
     };
     window.addEventListener('hashchange', handleUrlChange);
     window.addEventListener('popstate', handleUrlChange);
@@ -265,7 +278,8 @@ export default function App() {
   if (activePage === 'help') {
     return (
       <HelpPage
-        onNavigateToPrivacy={() => openLegalPage('privacy')}
+        showBackButton={navigatedFromHome}
+        onNavigateToPrivacy={() => openLegalPage('privacy', false)}
       />
     );
   }
@@ -273,7 +287,8 @@ export default function App() {
   if (activePage === 'privacy') {
     return (
       <PrivacyPolicyPage
-        onNavigateToHelp={() => openLegalPage('help')}
+        showBackButton={navigatedFromHome}
+        onNavigateToHelp={() => openLegalPage('help', false)}
       />
     );
   }
