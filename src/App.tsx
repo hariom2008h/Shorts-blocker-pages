@@ -220,12 +220,6 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const backToHome = () => {
-    setActivePage('home');
-    window.history.pushState(null, '', window.location.pathname);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   useEffect(() => {
     const handleUrlChange = () => {
       setActivePage(resolvePageFromUrl());
@@ -271,7 +265,6 @@ export default function App() {
   if (activePage === 'help') {
     return (
       <HelpPage
-        onBackToHome={backToHome}
         onNavigateToPrivacy={() => openLegalPage('privacy')}
       />
     );
@@ -280,7 +273,6 @@ export default function App() {
   if (activePage === 'privacy') {
     return (
       <PrivacyPolicyPage
-        onBackToHome={backToHome}
         onNavigateToHelp={() => openLegalPage('help')}
       />
     );

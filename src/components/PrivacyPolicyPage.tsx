@@ -1,14 +1,11 @@
 import { useEffect } from 'react';
-import { ArrowLeft } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface PrivacyPolicyPageProps {
-  onBackToHome: () => void;
   onNavigateToHelp: () => void;
 }
 
 export function PrivacyPolicyPage({
-  onBackToHome,
   onNavigateToHelp,
 }: PrivacyPolicyPageProps) {
   useEffect(() => {
@@ -17,13 +14,10 @@ export function PrivacyPolicyPage({
 
   return (
     <div className="min-h-screen bg-light-1 text-brand-dark font-sans selection:bg-brand-blue selection:text-white flex flex-col">
-      {/* Top Navigation Bar */}
+      {/* Top Navigation Bar (Standalone - No Home Redirect) */}
       <header className="sticky top-0 z-50 bg-gradient-to-r from-brand-blue to-brand-dark shadow-md border-b border-white/10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
-          <button
-            onClick={onBackToHome}
-            className="inline-flex items-center gap-2.5 text-white hover:opacity-90 transition-opacity whitespace-nowrap shrink-0 cursor-pointer"
-          >
+          <div className="inline-flex items-center gap-2.5 text-white whitespace-nowrap shrink-0">
             <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 shadow-sm border border-white/20">
               <img
                 src="./logo.jpg"
@@ -33,15 +27,11 @@ export function PrivacyPolicyPage({
               />
             </div>
             <span className="font-bold text-white tracking-tight">Shorts Blocker</span>
-          </button>
+          </div>
 
-          <button
-            onClick={onBackToHome}
-            className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 transition-colors px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-semibold text-white border border-white/20 whitespace-nowrap shrink-0 cursor-pointer"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Home</span>
-          </button>
+          <span className="text-xs sm:text-sm font-medium text-white/80 whitespace-nowrap shrink-0">
+            Privacy Policy
+          </span>
         </div>
       </header>
 
@@ -119,11 +109,11 @@ export function PrivacyPolicyPage({
                 4. Website &amp; GitHub Release Downloads
               </h2>
               <p>
-                When you visit this website to download the APK, your browser requests release metadata directly from the public GitHub Releases API (
+                When you visit our web portal to download the APK, your browser requests release metadata directly from the public GitHub Releases API (
                 <code className="bg-light-1 px-1.5 py-0.5 rounded font-mono text-xs border border-light-2">
                   api.github.com/repos/hariom2008h/Block-scroll/releases
                 </code>
-                ). This website does not use tracking cookies, behavioral analytics, or advertising pixels.
+                ). Our web pages do not use tracking cookies, behavioral analytics, or advertising pixels.
               </p>
             </section>
 
@@ -148,18 +138,11 @@ export function PrivacyPolicyPage({
         </motion.article>
       </main>
 
-      {/* Quiet Professional Footer */}
+      {/* Quiet Standalone Footer */}
       <footer className="w-full bg-gradient-to-r from-brand-blue to-brand-dark text-white py-8 px-4 sm:px-6 border-t border-white/10 mt-12">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-medium text-white/65">
           <span>&copy; {new Date().getFullYear()} Esech &middot; Hari Om Bhadana. All rights reserved.</span>
           <div className="flex items-center gap-5 text-white/80">
-            <button
-              onClick={onBackToHome}
-              className="hover:text-white transition-colors cursor-pointer whitespace-nowrap"
-            >
-              Home
-            </button>
-            <span aria-hidden="true">&middot;</span>
             <button
               onClick={onNavigateToHelp}
               className="hover:text-white transition-colors cursor-pointer whitespace-nowrap"

@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Github, ExternalLink } from 'lucide-react';
+import { Github, ExternalLink } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface HelpPageProps {
-  onBackToHome: () => void;
   onNavigateToPrivacy: () => void;
 }
 
@@ -108,7 +107,7 @@ const SETUP_STEPS = [
     number: '01',
     title: 'Open Accessibility Settings from Shorts Blocker',
     description:
-      'Install and open the Shorts Blocker APK. Follow the prompt to open your device\'s Accessibility Settings and locate "Shorts Blocker" under Installed Apps or Downloaded Services.',
+      'Open Shorts Blocker and follow the prompt to open your device\'s Accessibility Settings, then locate "Shorts Blocker" under Installed Apps or Downloaded Services.',
   },
   {
     number: '02',
@@ -130,7 +129,7 @@ const SETUP_STEPS = [
   },
 ];
 
-export function HelpPage({ onBackToHome, onNavigateToPrivacy }: HelpPageProps) {
+export function HelpPage({ onNavigateToPrivacy }: HelpPageProps) {
   const [selectedOem, setSelectedOem] = useState<OemKey>('pixel');
 
   useEffect(() => {
@@ -139,13 +138,10 @@ export function HelpPage({ onBackToHome, onNavigateToPrivacy }: HelpPageProps) {
 
   return (
     <div className="min-h-screen bg-light-1 text-brand-dark font-sans selection:bg-brand-blue selection:text-white flex flex-col">
-      {/* Top Navigation Bar */}
+      {/* Top Navigation Bar (Standalone - No Home Redirect) */}
       <header className="sticky top-0 z-50 bg-gradient-to-r from-brand-blue to-brand-dark shadow-md border-b border-white/10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
-          <button
-            onClick={onBackToHome}
-            className="inline-flex items-center gap-2.5 text-white hover:opacity-90 transition-opacity whitespace-nowrap shrink-0 cursor-pointer"
-          >
+          <div className="inline-flex items-center gap-2.5 text-white whitespace-nowrap shrink-0">
             <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 shadow-sm border border-white/20">
               <img
                 src="./logo.jpg"
@@ -155,15 +151,11 @@ export function HelpPage({ onBackToHome, onNavigateToPrivacy }: HelpPageProps) {
               />
             </div>
             <span className="font-bold text-white tracking-tight">Shorts Blocker</span>
-          </button>
+          </div>
 
-          <button
-            onClick={onBackToHome}
-            className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 transition-colors px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-semibold text-white border border-white/20 whitespace-nowrap shrink-0 cursor-pointer"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Home</span>
-          </button>
+          <span className="text-xs sm:text-sm font-medium text-white/80 whitespace-nowrap shrink-0">
+            Help Center
+          </span>
         </div>
       </header>
 
@@ -178,7 +170,7 @@ export function HelpPage({ onBackToHome, onNavigateToPrivacy }: HelpPageProps) {
           {/* Page Title Header */}
           <div className="border-b border-light-2 pb-8">
             <p className="text-xs sm:text-sm font-medium text-brand-dark/55 mb-2">
-              Documentation & Support &middot; Android 13, 14 &amp; 15
+              Documentation &amp; Support &middot; Android 13, 14 &amp; 15
             </p>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-extrabold text-brand-dark tracking-tight mb-4">
               Help Center
@@ -347,18 +339,11 @@ export function HelpPage({ onBackToHome, onNavigateToPrivacy }: HelpPageProps) {
         </motion.div>
       </main>
 
-      {/* Quiet Professional Footer */}
+      {/* Quiet Standalone Footer */}
       <footer className="w-full bg-gradient-to-r from-brand-blue to-brand-dark text-white py-8 px-4 sm:px-6 border-t border-white/10 mt-12">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-medium text-white/65">
           <span>&copy; {new Date().getFullYear()} Esech &middot; Hari Om Bhadana. All rights reserved.</span>
           <div className="flex items-center gap-5 text-white/80">
-            <button
-              onClick={onBackToHome}
-              className="hover:text-white transition-colors cursor-pointer whitespace-nowrap"
-            >
-              Home
-            </button>
-            <span aria-hidden="true">&middot;</span>
             <button
               onClick={onNavigateToPrivacy}
               className="hover:text-white transition-colors cursor-pointer whitespace-nowrap"
